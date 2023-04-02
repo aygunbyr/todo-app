@@ -1,11 +1,78 @@
 import Head from "next/head";
-import Image from "next/image";
 import { Inter } from "next/font/google";
-import styles from "@/styles/Todo.module.css";
+import TodoList from "@/components/TodoList";
+import { useEffect, useState } from "react";
+import { ITodo } from "@/types/todo";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
+  const [completed, setCompleted] = useState<number>(0);
+  const [content, setContent] = useState<string>("");
+
+  const [todos, setTodos] = useState<ITodo[]>([
+    {
+      id: 5,
+      content: "Learn JavaScript",
+      isCompleted: false,
+    },
+    {
+      id: 18,
+      content: "Learn React",
+      isCompleted: false,
+    },
+    {
+      id: 22,
+      content: "Have a life!",
+      isCompleted: false,
+    },
+  ]);
+
+  useEffect(() => {
+    let completed = 0;
+    todos.forEach((todo) => (todo.isCompleted ? null : completed++));
+    setCompleted(completed);
+  }, [todos]);
+
+  const changeStatus = (todoId: number) => {
+    const newTodos = todos.map((todo) => {
+      // All except given remains the same
+      if (todo.id !== todoId) return todo;
+
+      // Change given todo status
+      return { ...todo, isCompleted: !todo.isCompleted };
+    });
+
+    // Update todos
+    setTodos(newTodos);
+  };
+
+  const handleSubmit = (event: React.SyntheticEvent) => {
+    // Prevent default HTML Form Submit action
+    event.preventDefault();
+
+    // If input is empty, abort submit process
+    if (content.length < 1) return;
+
+    // Create new todo object with random ID and initially not completed
+    const newTodo = {
+      id: Math.floor(Math.random() * 428374324),
+      content: content,
+      isCompleted: false,
+    };
+
+    // Add todo to todos array
+    setTodos([...todos, newTodo]);
+
+    // Clear input
+    setContent("");
+  };
+
+  // Bind content state and todo input
+  const onInputChange = (event: React.FormEvent<HTMLInputElement>): void => {
+    setContent(event.currentTarget.value);
+  };
+
   return (
     <>
       <Head>
@@ -17,10 +84,12 @@ export default function Home() {
       <section className="todoapp">
         <header className="header">
           <h1>todos</h1>
-          <form>
+          <form onSubmit={handleSubmit}>
             <input
               className="new-todo"
               placeholder="What needs to be done?"
+              onChange={onInputChange}
+              value={content}
               autoFocus
             />
           </form>
@@ -30,34 +99,12 @@ export default function Home() {
           <input className="toggle-all" type="checkbox" />
           <label htmlFor="toggle-all">Mark all as complete</label>
 
-          <ul className="todo-list">
-            <li className="completed">
-              <div className="view">
-                <input className="toggle" type="checkbox" />
-                <label>Learn JavaScript</label>
-                <button className="destroy"></button>
-              </div>
-            </li>
-            <li>
-              <div className="view">
-                <input className="toggle" type="checkbox" />
-                <label>Learn React</label>
-                <button className="destroy"></button>
-              </div>
-            </li>
-            <li>
-              <div className="view">
-                <input className="toggle" type="checkbox" />
-                <label>Have a life!</label>
-                <button className="destroy"></button>
-              </div>
-            </li>
-          </ul>
+          <TodoList todos={todos} changeStatus={changeStatus} />
         </section>
 
         <footer className="footer">
           <span className="todo-count">
-            <strong>2</strong>
+            <strong>{completed} </strong>
             items left
           </span>
 

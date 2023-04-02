@@ -9,10 +9,12 @@ type TodoProps = {
 const Todo = (props: TodoProps) => {
   return (
     <>
+      {/* If todo is completed text is striketough */}
       <li className={props.todo.isCompleted ? "completed" : ""}>
         <div className="view">
           <input
             className={"toggle"}
+            // If todo is completed checkbox is checked
             checked={props.todo.isCompleted}
             type="checkbox"
             onClick={() => props.changeStatus(props.todo.id)}

@@ -2,18 +2,28 @@ import TodoList from "@/components/TodoList";
 import { useEffect, useState, useRef } from "react";
 import { ITodo } from "@/types/todo";
 
+// Todo Filter can only get one of these values
 type TodoFilter = "all" | "active" | "completed";
 
 const TodoApp = () => {
+  // State of number of completed todos
   const [completed, setCompleted] = useState<number>(0);
+
+  // Content of todo input
   const [content, setContent] = useState<string>("");
+
+  // State of current filter
   const [filter, setFilter] = useState<TodoFilter>("all");
 
+  // Reference of todo input
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // References of filter anchors
   const allRef = useRef<HTMLAnchorElement>(null);
   const activeRef = useRef<HTMLAnchorElement>(null);
   const completedRef = useRef<HTMLAnchorElement>(null);
 
+  // State of filtered todos
   const [filteredTodos, setFilteredTodos] = useState<ITodo[]>([]);
 
   // Initial state of todos
@@ -157,6 +167,7 @@ const TodoApp = () => {
 
   // Handle delete todo
   const handleDelete = (id: number) => {
+    // Delete given todo
     const newTodos = [...todos].filter((todo) => todo.id !== id);
 
     setTodos(newTodos);

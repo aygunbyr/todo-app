@@ -12,6 +12,7 @@ const TodoList = (props: TodoListProps) => {
     <>
       <ul className="todo-list">
         {props.todos.map((todo) => (
+          // Todo component shows single todo
           <Todo
             key={todo.id}
             todo={todo}

@@ -4,6 +4,7 @@ import Todo from "./Todo";
 type TodoListProps = {
   todos: ITodo[];
   changeStatus: (todoId: number) => void;
+  handleDelete: (todoId: number) => void;
 };
 
 const TodoList = (props: TodoListProps) => {
@@ -11,7 +12,12 @@ const TodoList = (props: TodoListProps) => {
     <>
       <ul className="todo-list">
         {props.todos.map((todo) => (
-          <Todo key={todo.id} todo={todo} changeStatus={props.changeStatus} />
+          <Todo
+            key={todo.id}
+            todo={todo}
+            changeStatus={props.changeStatus}
+            handleDelete={props.handleDelete}
+          />
         ))}
       </ul>
     </>
